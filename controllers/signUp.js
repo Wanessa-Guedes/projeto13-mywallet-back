@@ -26,19 +26,19 @@ export async function postSignUp (req, res){
     const passowrdHash = bcrypt.hashSync(value.password, 10);
     
     try {
-        const collection = db.collection('users');
+        const usersCollection = db.collection('users');
         const infoUser = {
             name: value.name,
             email: value.email,
             password: passowrdHash
             };
         
-        const emailExists = await collection.findOne({email: infoUser.email});
+        const emailExists = await usersCollection.findOne({email: infoUser.email});
         if(emailExists){
-            return res.status(404).send(console.log(chalk.bold.green("E-mail já cadastrado.")))
+            return res.status(404).send(console.log(chalk.bold.red("E-mail já cadastrado.")))
         }
         
-        await collection.insertOne(infoUser)
+        await usersCollection.insertOne(infoUser)
         console.log(infoUser)
         //TODO: Tela 1 -- Colocar no banco de dados
 
