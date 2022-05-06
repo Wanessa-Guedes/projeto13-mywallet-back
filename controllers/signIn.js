@@ -2,7 +2,7 @@ import db from "../db.js";
 import chalk from "chalk";
 import bcrypt from "bcrypt";
 import Joi from "joi";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 } from 'uuid';
 
 export async function postSignIn(req, res){
     
@@ -29,13 +29,13 @@ export async function postSignIn(req, res){
         };
         const isUser = await usersCollection.findOne({email: loginUserData.email});
         if(isUser && bcrypt.compareSync(value.password, isUser.password)){
-            const token = uuid();
+            const token = v4();
             // Crie uma sessão na coleção de sessões para o usuário e retorne um token para o front-end
             await db.collection("sessions").insertOne({
                 userId: isUser._id, 
                 token
             });
-            return res.status(200).send(console.log(chalk.green.bold("Usuário logado com sucesso!"), token));
+            return res.status(200).send({name: isUser.name, token});
         } else {
             return res.status(401).send(console.log(chalk.bold.red("Falha no log-in")));
         }

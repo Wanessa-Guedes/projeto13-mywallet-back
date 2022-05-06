@@ -35,11 +35,11 @@ export async function postSignUp (req, res){
         
         const emailExists = await usersCollection.findOne({email: infoUser.email});
         if(emailExists){
-            return res.status(404).send(console.log(chalk.bold.red("E-mail já cadastrado.")))
+            return res.status(404).send(console.log(chalk.bold.red("E-mail já cadastrado.")), infoUser.name);
         }
         
         await usersCollection.insertOne(infoUser)
-        console.log(infoUser)
+        console.log(infoUser);
         //TODO: Tela 1 -- Colocar no banco de dados
 
         res.status(201).send(console.log(chalk.bold.green("Cadastro realizado com sucesso")));
