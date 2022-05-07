@@ -5,6 +5,8 @@ import Joi from "joi";
 import { postSignUp } from "./controllers/signUp.js";
 import { postSignIn } from "./controllers/signIn.js";
 import { getMainPage } from "./controllers/mainPage.js";
+import { postOutFlow } from "./controllers/outflow.js";
+import { postInFlow } from "./controllers/inflow.js";
 
 const app = express();
 app.use(json());
@@ -21,8 +23,9 @@ app.post("/signUp", postSignUp)
 //TODO: Tela 3 e tela 6: Tela de registros (get - colocar os registros,
 app.get("/mainpage", getMainPage) 
 //TODO: Tela 4: Opção de nova entrada (post - {valor e descrição})
+app.post("/outflow", postOutFlow) 
 //TODO: Tela 5: Opção de nova saída (post - {valor e descrição})
-
+app.post("/inflow", postInFlow) 
 
 
 // subindo back-end

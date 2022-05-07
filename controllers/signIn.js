@@ -30,6 +30,7 @@ export async function postSignIn(req, res){
         const isUser = await usersCollection.findOne({email: loginUserData.email});
         if(isUser && bcrypt.compareSync(value.password, isUser.password)){
             const token = v4();
+            console.log(token)
             // Crie uma sessão na coleção de sessões para o usuário e retorne um token para o front-end
             await db.collection("sessions").insertOne({
                 userId: isUser._id, 
