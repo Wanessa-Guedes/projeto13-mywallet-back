@@ -2,6 +2,7 @@ import db from "../db.js";
 import chalk from "chalk";
 import bcrypt from "bcrypt";
 import Joi from "joi";
+import { stripHtml } from "string-strip-html";
 
 // Tela de cadastro --> Recebe - name, email, password, confirm
 
@@ -13,7 +14,7 @@ export async function postSignUp (req, res){
     const signUpSchema = Joi.object({
         name: Joi.string().required(),
         email: Joi.string().required(),
-        password: Joi.string().required(),
+        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
         confirm: Joi.ref('password')
     });
 
@@ -24,11 +25,12 @@ export async function postSignUp (req, res){
     };
 
     const passowrdHash = bcrypt.hashSync(value.password, 10);
+    const sanitizedName = stripHtml(value.name).result.trim();
     
     try {
         const usersCollection = db.collection('users');
         const infoUser = {
-            name: value.name,
+            name: sanitizedName,
             email: value.email,
             password: passowrdHash
             };

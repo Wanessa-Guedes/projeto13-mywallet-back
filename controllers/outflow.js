@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { v4 } from 'uuid';
 import Joi from "joi";
 import dayjs from "dayjs";
+import { stripHtml } from "string-strip-html";
 
 export async function postOutFlow(req, res){
 
@@ -21,6 +22,8 @@ export async function postOutFlow(req, res){
             return;
         };  
 
+        const sanitizedDescription = stripHtml(value.description).result;
+
     try {
         const {authorization} = req.headers;
         const token = authorization?.replace("Bearer","").trim();
@@ -32,7 +35,7 @@ export async function postOutFlow(req, res){
         await db.collection("cashFlow").insertOne({
             userId: id,
             value: value.value,
-            description: value.description,
+            description: sanitizedDescription,
             type: "exit", 
             day: dayFlow});
         res.status(201).send(console.log(chalk.bold.green("Outflow funcionando!")));

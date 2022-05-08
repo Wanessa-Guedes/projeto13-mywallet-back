@@ -15,9 +15,9 @@ export async function getMainPage(req, res){
         const userFlow = await db.collection("cashFlow").find({userId: validUser.userId}).toArray();
         userFlow.map((flow) => {
             if(flow.type === "entry"){
-                sum += flow.value;
+                sum += parseFloat(flow.value);
             } else if (flow.type === "exit"){
-                sum -= flow.value;
+                sum -= parseFloat(flow.value);
             }
         });
         res.status(200).send([userFlow, sum]);

@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { v4 } from 'uuid';
 import Joi from "joi";
 import dayjs from "dayjs";
+import { stripHtml } from "string-strip-html";
 
 export async function postInFlow(req, res){
 
@@ -14,12 +15,14 @@ export async function postInFlow(req, res){
             value: Joi.number().required(),
             description: Joi.string().required(),
         });
-
+        console.log()
         const {error, value} = outFLowSchema.validate(req.body, {abortEarly: false});
         if(error){
             res.status(422).send(error.details.map(detail => detail.message));
             return;
-        };  
+        }; 
+
+        const sanitizedDescription = stripHtml(value.description).result;
 
     try {
         const {authorization} = req.headers;
@@ -32,7 +35,7 @@ export async function postInFlow(req, res){
         await db.collection("cashFlow").insertOne({
             userId: id,
             value: value.value,
-            description: value.description,
+            description: sanitizedDescription,
             type: "entry", 
             day: dayFlow});
         res.status(201).send(console.log(chalk.bold.green("Inflow funcionando!")));
