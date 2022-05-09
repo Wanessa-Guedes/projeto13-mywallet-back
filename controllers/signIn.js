@@ -20,19 +20,17 @@ export async function postSignIn(req, res){
         res.status(422).send(error.details.map(detail => detail.message));
         return;
     };
-        //TODO: Tela 1 -- Colocar no banco de dados
-    try{
 
-        const usersCollection = db.collection('users');
+    try{
         const loginUserData = {
             email: value.email,
             password: value.password
         };
+        const usersCollection = db.collection('users');
         const isUser = await usersCollection.findOne({email: loginUserData.email});
         if(isUser && bcrypt.compareSync(value.password, isUser.password)){
             const token = v4();
-            console.log(token)
-            // Crie uma sessão na coleção de sessões para o usuário e retorne um token para o front-end
+            //console.log(token)
             await db.collection("sessions").insertOne({
                 userId: isUser._id, 
                 token
@@ -41,7 +39,6 @@ export async function postSignIn(req, res){
         } else {
             return res.status(401).send(console.log(chalk.bold.red("Falha no log-in")));
         }
-
     } catch (e) {
         res.status(500).send(console.log(chalk.bold.red("Erro ao logar"), e));
     }

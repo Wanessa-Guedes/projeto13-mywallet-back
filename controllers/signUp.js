@@ -20,8 +20,8 @@ export async function postSignUp (req, res){
 
     const {error, value} = signUpSchema.validate(req.body, {abortEarly: false});
     if(error){
-        res.status(422).send(error.details.map(detail => detail.message));
-        return;
+        return res.status(422).send(`Dados preenchidos incorretamente. 
+                                    !! Senha precisa ter no min 3 caracteres.`);
     };
 
     const passowrdHash = bcrypt.hashSync(value.password, 10);
@@ -34,16 +34,13 @@ export async function postSignUp (req, res){
             email: value.email,
             password: passowrdHash
             };
-        
         const emailExists = await usersCollection.findOne({email: infoUser.email});
         if(emailExists){
-            return res.status(404).send(console.log(chalk.bold.red("E-mail já cadastrado.")), infoUser.name);
+            return res.status(404).send(console.log(chalk.bold.red("E-mail já cadastrado.")));
         }
         
-        await usersCollection.insertOne(infoUser)
+        await usersCollection.insertOne(infoUser);
         console.log(infoUser);
-        //TODO: Tela 1 -- Colocar no banco de dados
-
         res.status(201).send(console.log(chalk.bold.green("Cadastro realizado com sucesso")));
 
     } catch (e) {
