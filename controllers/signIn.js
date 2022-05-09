@@ -17,8 +17,8 @@ export async function postSignIn(req, res){
 
     const {error, value} = signInSchema.validate(req.body, {abortEarly: false});
     if(error){
-        res.status(422).send(error.details.map(detail => detail.message));
-        return;
+        return res.status(422).send(`Dados preenchidos incorretamente. 
+                                    !! Senha tem no min 3 caracteres.`);
     };
 
     try{
@@ -37,9 +37,9 @@ export async function postSignIn(req, res){
             });
             return res.status(200).send({name: isUser.name, token});
         } else {
-            return res.status(401).send(console.log(chalk.bold.red("Falha no log-in")));
+            return res.status(401).send("Falha no log-in. Usuário não cadastrado ou senha inválida.");
         }
     } catch (e) {
-        res.status(500).send(console.log(chalk.bold.red("Erro ao logar"), e));
+        res.status(500).send("Erro ao logar");
     }
 }

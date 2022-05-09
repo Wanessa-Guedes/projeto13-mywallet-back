@@ -24,6 +24,6 @@ export async function getMainPage(req, res){
         });
         res.status(200).send([userFlow, sum]);
     } catch (e) {
-        res.status(500).send(console.log(chalk.bold.red("Erro na página principal"), e));
+        res.status(500).send("Erro na página.");
     }
 }

@@ -36,7 +36,7 @@ export async function postSignUp (req, res){
             };
         const emailExists = await usersCollection.findOne({email: infoUser.email});
         if(emailExists){
-            return res.status(404).send(console.log(chalk.bold.red("E-mail já cadastrado.")));
+            return res.status(409).send("E-mail já cadastrado.");
         }
         
         await usersCollection.insertOne(infoUser);
@@ -44,6 +44,6 @@ export async function postSignUp (req, res){
         res.status(201).send(console.log(chalk.bold.green("Cadastro realizado com sucesso")));
 
     } catch (e) {
-        res.status(500).send(console.log(chalk.bold.red("Erro ao logar"), e));
+        res.status(500).send("Erro ao logar");
     }
 }

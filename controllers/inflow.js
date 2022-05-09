@@ -18,8 +18,7 @@ export async function postInFlow(req, res){
         console.log()
         const {error, value} = outFLowSchema.validate(req.body, {abortEarly: false});
         if(error){
-            res.status(422).send(error.details.map(detail => detail.message));
-            return;
+            return res.status(422).send("Erro ao inserir os dados. Por favor, verifique-os novamente.");
         }; 
 
         const sanitizedDescription = stripHtml(value.description).result;
@@ -42,6 +41,6 @@ export async function postInFlow(req, res){
             day: dayFlow});
         res.status(201).send(console.log(chalk.bold.green("Inflow funcionando!")));
     } catch (e) {
-        res.status(500).send(console.log(chalk.bold.red("Erro na página de inserir entrada money"), e));
+        res.status(500).send("Erro na página.");
     }
 }
